@@ -1,3 +1,4 @@
+import { ACCEPTED_FILE_TYPES } from "@/components/chat/chat-hooks/use-select-file-handler"
 import { SidebarCreateItem } from "@/components/sidebar/items/all/sidebar-create-item"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,10 +16,9 @@ export const CreateFile: FC<CreateFileProps> = ({ isOpen, onOpenChange }) => {
   const { profile, selectedWorkspace } = useContext(ChatbotUIContext)
 
   const [name, setName] = useState("")
+  const [isTyping, setIsTyping] = useState(false)
   const [description, setDescription] = useState("")
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-
-  const ALLOWED_FILES = ["pdf"]
 
   const handleSelectedFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
@@ -51,6 +51,7 @@ export const CreateFile: FC<CreateFileProps> = ({ isOpen, onOpenChange }) => {
         } as TablesInsert<"files">
       }
       isOpen={isOpen}
+      isTyping={isTyping}
       onOpenChange={onOpenChange}
       renderInputs={() => (
         <>
@@ -60,7 +61,7 @@ export const CreateFile: FC<CreateFileProps> = ({ isOpen, onOpenChange }) => {
             <Input
               type="file"
               onChange={handleSelectedFile}
-              accept={ALLOWED_FILES.map(file => `.${file}`).join(",")}
+              accept={ACCEPTED_FILE_TYPES}
             />
           </div>
 
@@ -76,11 +77,11 @@ export const CreateFile: FC<CreateFileProps> = ({ isOpen, onOpenChange }) => {
           </div>
 
           <div className="space-y-1">
-            <Label>Description (optional)</Label>
+            <Label>Description</Label>
 
             <Input
               placeholder="File description..."
-              value={description}
+              value={name}
               onChange={e => setDescription(e.target.value)}
               maxLength={FILE_DESCRIPTION_MAX}
             />

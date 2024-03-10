@@ -1,8 +1,9 @@
-import Loading from "@/app/loading"
+import Loading from "@/app/[locale]/loading"
 import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
 import { ChatbotUIContext } from "@/context/context"
+import { getAssistantToolsByAssistantId } from "@/db/assistant-tools"
+import { getChatFilesByChatId } from "@/db/chat-files"
 import { getChatById } from "@/db/chats"
-import { getFileById } from "@/db/files"
 import { getMessageFileItemsByMessageId } from "@/db/message-file-items"
 import { getMessagesByChatId } from "@/db/messages"
 import { getMessageImageFromStorage } from "@/db/storage/message-images"
@@ -34,10 +35,10 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
     assistants,
     setSelectedAssistant,
     setChatFileItems,
-    chatFiles,
     setChatFiles,
     setShowFilesDisplay,
-    setUseRetrieval
+    setUseRetrieval,
+    setSelectedTools
   } = useContext(ChatbotUIContext)
 
   const { handleNewChat, handleFocusChatInput } = useChatHandler()
@@ -121,33 +122,19 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
     const uniqueFileItems = messageFileItems.flatMap(item => item.file_items)
     setChatFileItems(uniqueFileItems)
 
-    const uniqueFileIds = [
-      ...new Set(uniqueFileItems.map(item => item.file_id))
-    ]
+    const chatFiles = await getChatFilesByChatId(params.chatid as string)
 
-    if (uniqueFileIds.length > 0) {
-      const fileFetchPromises = uniqueFileIds.map(async fileId => {
-        const file = await getFileById(fileId)
-        return file
-      })
+    setChatFiles(
+      chatFiles.files.map(file => ({
+        id: file.id,
+        name: file.name,
+        type: file.type,
+        file: null
+      }))
+    )
 
-      const files = await Promise.all(fileFetchPromises)
-      setChatFiles(
-        files.map(file => ({
-          id: file.id,
-          name: file.name,
-          type: file.type,
-          file: null
-        }))
-      )
-
-      setUseRetrieval(true)
-      setShowFilesDisplay(true)
-    } else {
-      setUseRetrieval(false)
-      setShowFilesDisplay(false)
-      setChatFiles([])
-    }
+    setUseRetrieval(true)
+    setShowFilesDisplay(true)
 
     const fetchedChatMessages = fetchedMessages.map(message => {
       return {
@@ -174,6 +161,11 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
 
       if (assistant) {
         setSelectedAssistant(assistant)
+
+        const assistantTools = (
+          await getAssistantToolsByAssistantId(assistant.id)
+        ).tools
+        setSelectedTools(assistantTools)
       }
     }
 
@@ -209,14 +201,14 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
         <ChatSecondaryButtons />
       </div>
 
-      <div className="bg-secondary flex max-h-[50px] min-h-[50px] w-full items-center justify-center border-b-2 px-10 font-bold">
+      <div className="bg-secondary flex max-h-[50px] min-h-[50px] w-full items-center justify-center border-b-2 px-20 font-bold">
         <div className="max-w-[300px] truncate sm:max-w-[400px] md:max-w-[500px] lg:max-w-[600px] xl:max-w-[700px]">
           {selectedChat?.name || "Chat"}
         </div>
       </div>
 
       <div
-        className="flex h-full w-full flex-col overflow-auto border-b"
+        className="flex size-full flex-col overflow-auto border-b"
         onScroll={handleScroll}
       >
         <div ref={messagesStartRef} />

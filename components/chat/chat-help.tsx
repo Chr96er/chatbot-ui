@@ -27,7 +27,7 @@ export const ChatHelp: FC<ChatHelpProps> = ({}) => {
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <IconQuestionMark className="bg-primary text-secondary h-[24px] w-[24px] cursor-pointer rounded-full p-0.5 opacity-60 hover:opacity-50 lg:h-[30px] lg:w-[30px] lg:p-1" />
+        <IconQuestionMark className="bg-primary text-secondary size-[24px] cursor-pointer rounded-full p-0.5 opacity-60 hover:opacity-50 lg:size-[30px] lg:p-1" />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
@@ -174,7 +174,7 @@ export const ChatHelp: FC<ChatHelpProps> = ({}) => {
         </DropdownMenuItem>
 
         <DropdownMenuItem className="flex justify-between">
-          <div>Open Presets</div>
+          <div>Open Quick Settings</div>
           <div className="flex opacity-60">
             <div className="min-w-[30px] rounded border-[1px] p-1 text-center">
               ⌘

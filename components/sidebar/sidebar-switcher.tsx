@@ -1,11 +1,13 @@
-import { exportLocalStorageAsJSON } from "@/lib/export-old-data"
 import { ContentType } from "@/types"
 import {
   IconAdjustmentsHorizontal,
+  IconBolt,
+  IconBooks,
   IconFile,
-  IconFileDownload,
   IconMessage,
-  IconPencil
+  IconPencil,
+  IconRobotFace,
+  IconSparkles
 } from "@tabler/icons-react"
 import { FC } from "react"
 import { TabsList } from "../ui/tabs"
@@ -24,7 +26,7 @@ export const SidebarSwitcher: FC<SidebarSwitcherProps> = ({
 }) => {
   return (
     <div className="flex flex-col justify-between border-r-2 pb-5">
-      <TabsList className="bg-background grid h-[400px] grid-rows-7">
+      <TabsList className="bg-background grid h-[440px] grid-rows-7">
         <SidebarSwitchItem
           icon={<IconMessage size={SIDEBAR_ICON_SIZE} />}
           contentType="chats"
@@ -44,24 +46,34 @@ export const SidebarSwitcher: FC<SidebarSwitcherProps> = ({
         />
 
         <SidebarSwitchItem
+          icon={<IconSparkles size={SIDEBAR_ICON_SIZE} />}
+          contentType="models"
+          onContentTypeChange={onContentTypeChange}
+        />
+
+        <SidebarSwitchItem
           icon={<IconFile size={SIDEBAR_ICON_SIZE} />}
           contentType="files"
           onContentTypeChange={onContentTypeChange}
         />
 
-        {/* TODO */}
-        {/* <SidebarSwitchItem
+        <SidebarSwitchItem
           icon={<IconBooks size={SIDEBAR_ICON_SIZE} />}
           contentType="collections"
           onContentTypeChange={onContentTypeChange}
-        /> */}
+        />
 
-        {/* TODO */}
-        {/* <SidebarSwitchItem
+        <SidebarSwitchItem
           icon={<IconRobotFace size={SIDEBAR_ICON_SIZE} />}
           contentType="assistants"
           onContentTypeChange={onContentTypeChange}
-        /> */}
+        />
+
+        <SidebarSwitchItem
+          icon={<IconBolt size={SIDEBAR_ICON_SIZE} />}
+          contentType="tools"
+          onContentTypeChange={onContentTypeChange}
+        />
       </TabsList>
 
       <div className="flex flex-col items-center space-y-4">
@@ -70,15 +82,6 @@ export const SidebarSwitcher: FC<SidebarSwitcherProps> = ({
 
         {/* TODO */}
         {/* <Alerts /> */}
-
-        <WithTooltip
-          display={
-            <div>Download Chatbot UI 1.0 data as JSON. Import coming soon!</div>
-          }
-          trigger={
-            <IconFileDownload size={32} onClick={exportLocalStorageAsJSON} />
-          }
-        />
 
         <WithTooltip
           display={<div>Profile Settings</div>}
