@@ -41,8 +41,7 @@ export async function POST(request: Request) {
         model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
         messages: messages as ChatCompletionCreateParamsBase["messages"],
         temperature: chatSettings.temperature,
-        max_tokens:
-          CHAT_SETTING_LIMITS[chatSettings.model].MAX_TOKEN_OUTPUT_LENGTH,
+        max_tokens: chatSettings.model === "gpt-4-vision-preview" ? 4096 : null,
         stream: true
       })
 
@@ -95,8 +94,7 @@ export async function POST(request: Request) {
         model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
         messages: messages as ChatCompletionCreateParamsBase["messages"],
         temperature: chatSettings.temperature,
-        max_tokens:
-          CHAT_SETTING_LIMITS[chatSettings.model].MAX_TOKEN_OUTPUT_LENGTH,
+        max_tokens: chatSettings.model === "gpt-4-vision-preview" ? 4096 : null,
         stream: true
       })
 
