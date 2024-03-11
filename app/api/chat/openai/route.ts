@@ -31,40 +31,40 @@ export async function POST(request: Request) {
         organization: profile.openai_organization_id
       })
 
-      messages[messages.length - 1].content =
-        "Take this prompt and turn it into a great prompt to generate a Dall-E image. " +
-        "Make it extremely elaborate and give it plenty of color: \
-        " +
-        latestMessage
+      // messages[messages.length - 1].content =
+      //   "Take this prompt and turn it into a great prompt to generate a Dall-E image. " +
+      //   "Make it extremely elaborate and give it plenty of color: \
+      //   " +
+      //   latestMessage
 
-      const imageGenerationPromptStream = await openai.chat.completions.create({
-        model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
-        messages: messages as ChatCompletionCreateParamsBase["messages"],
-        temperature: chatSettings.temperature,
-        max_tokens: chatSettings.model === "gpt-4-vision-preview" ? 4096 : null,
-        stream: true
-      })
+      // const imageGenerationPromptStream = await openai.chat.completions.create({
+      //   model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
+      //   messages: messages as ChatCompletionCreateParamsBase["messages"],
+      //   temperature: chatSettings.temperature,
+      //   max_tokens: chatSettings.model === "gpt-4-vision-preview" ? 4096 : null,
+      //   stream: true
+      // })
 
-      var imageGenerationPrompt = ""
+      // var imageGenerationPrompt = ""
 
-      for await (const chunk of imageGenerationPromptStream) {
-        imageGenerationPrompt += chunk.choices[0]?.delta?.content || ""
-      }
+      // for await (const chunk of imageGenerationPromptStream) {
+      //   imageGenerationPrompt += chunk.choices[0]?.delta?.content || ""
+      // }
 
       // Todo CHO20240112: Get those image generation parameters from the UI settings
       const response = await openai.images.generate({
         model: "dall-e-3",
-        prompt: imageGenerationPrompt,
+        prompt: latestMessage,
         n: 1,
         quality: "hd",
         response_format: "url"
       })
 
       return new Response(
-        imageGenerationPrompt +
-          " \
-      " +
-          response.data[0].url,
+        //   imageGenerationPrompt +
+        //     " \
+        // " +
+        response.data[0].url,
         {
           status: 200
         }
